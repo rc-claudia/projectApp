@@ -5,7 +5,7 @@ package com.example.claudia.quizproject;
  */
 
 public class Score extends User {
-    int score;
+    private int score;
 
     public Score(){
         score = 0;

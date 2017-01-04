@@ -1,6 +1,7 @@
 package com.example.claudia.quizproject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.input.InputManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,16 +9,18 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class Username extends AppCompatActivity {
+public class UsernameActivity extends AppCompatActivity {
 
     private EditText mUsernameEditText;
+    private Button mStartButton;
     String username;
 
-    public Username (User thisUsername){
-        thisUsername.setUser(username);
+    public String getUsername() {
+        return username;
     }
 
     @Override
@@ -46,6 +49,16 @@ public class Username extends AppCompatActivity {
             }
         });
 
+        mStartButton = (Button)findViewById(R.id.start_btn);
+        mStartButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // Start CheatActivity
+                Intent i = QuestionActivity.newIntent(UsernameActivity.this, username);
+                startActivity(i);
+            }
+        });
     }
 
 
