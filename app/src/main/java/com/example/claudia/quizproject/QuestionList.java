@@ -1,5 +1,7 @@
 package com.example.claudia.quizproject;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -8,7 +10,7 @@ import java.util.UUID;
  * Created by Claudia on 03/01/2017.
  */
 
-/*public class QuestionList {
+public class QuestionList {
         private static QuestionList sQuestionList;
     private List<Question> mQuestions;
 
@@ -30,7 +32,7 @@ import java.util.UUID;
             };
             }
 
-            public List<Question> getCrimes() {
+            public List<Question> getQuestions() {
                 return mQuestions;
             }
 
@@ -43,4 +45,4 @@ import java.util.UUID;
                 return null;
         }
 
-}*/
+}

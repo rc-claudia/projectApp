@@ -6,16 +6,16 @@ package com.example.claudia.quizproject;
 
 public class Score extends User {
     private int score;
+    private String username;
 
     public Score(){
         score = 0;
     }
 
     public Score (String theUser, int userScore) {
-        super.getUser();
-        score = userScore;
+        this.username = theUser;
+        this.score = userScore;
     }
-
 
     public int getScore() {
         return score;
@@ -25,6 +25,13 @@ public class Score extends User {
         this.score = theScore;
     }
 
+    @Override
+    public String getUserOnScreen() {
+        return username;
+    }
 
-
+    @Override
+    public void setUserOnScreen(String username) {
+        this.username = username;
+    }
 }

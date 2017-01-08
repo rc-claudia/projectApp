@@ -16,9 +16,10 @@ public class ScoreFragment extends Fragment {
     private TextView mScoreDisplay;
     private TextView mUsernameDisplay;
     private int mUserScore;
-    private String mUsername;
     protected static final String EXTRA_SCORE = "QuizProject.score";
     protected static final String EXTRA_USERNAME = "QuizProject.username";
+    User user;
+    private String mUsername = user.getUserOnScreen();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,15 +31,17 @@ public class ScoreFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_score, container, false);
+        DBHandle db = new DBHandle(getActivity());
 
-        mUsername = getActivity().getIntent().getStringExtra(EXTRA_USERNAME);
-        mUserScore = getActivity().getIntent().getIntExtra(EXTRA_SCORE, 0);
+        final User retrievedUser = db.getUser(mUsername);
+
+        mUserScore = db.getScore(mUsername);
 
         mUsernameDisplay = (TextView) v.findViewById(R.id.user_text_view);
         mUsernameDisplay.setText(mUsername);
 
         mScoreDisplay = (TextView) v.findViewById(R.id.score_text_view);
-        mScoreDisplay.setText(mUserScore);
+        mScoreDisplay.setText(mUserScore + "");
         return v;
     }
 }

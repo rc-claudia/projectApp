@@ -27,8 +27,12 @@ public class QuestionFragment extends Fragment{
     private static final int REQUEST_CODE_CHEAT = 0;
     public int currentGameScore = 0;
     boolean answerIsTrue;
-    private String username;
-    protected static final String EXTRA_USERNAME = "QuizProject.username";
+    //private String username;
+    protected static final String EXTRA_RECEIVED_USERNAME = "QuizProject.username";
+
+    //DBHandle db = new DBHandle(getActivity());
+    User user = new User();
+    String username = user.getUserOnScreen();
 
     private void checkAnswer(boolean userPressedTrue) {
         boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
@@ -95,7 +99,7 @@ public class QuestionFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_question, container, false);
-        username = getActivity().getIntent().getStringExtra(EXTRA_USERNAME);
+        //username = getActivity().getIntent().getStringExtra(EXTRA_RECEIVED_USERNAME);
 
         mQuestionTextView = (TextView) v.findViewById(R.id.question_text_view);
 
@@ -148,10 +152,13 @@ public class QuestionFragment extends Fragment{
 
         mFinishButton = (Button) v.findViewById(R.id.finish_btn);
 
+        //final User retrievedUser = db.getUser(username);
+
         mFinishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 countScore();
+                //db.addAttempt(new Score(retrievedUser.getUserOnScreen(), currentGameScore));
                 Intent intent = ScoreActivity.theIntent(getActivity(), currentGameScore, username);
                 startActivity(intent);
             }

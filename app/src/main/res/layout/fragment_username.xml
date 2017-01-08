@@ -12,17 +12,28 @@
         android:inputType="textPersonName"
         android:hint="Enter Username here"
         android:padding="24dp"
-        android:imeOptions="actionDone"/>
+        android:imeOptions="actionNext"/>
 
-    <LinearLayout
+    <EditText
+        android:id="@+id/email_edit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:inputType="textEmailAddress"
+        android:hint="Enter email address"
+        android:imeOptions="actionNext"/>
+
+    <EditText
+        android:id="@+id/password_edit_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:hint="Enter password"
+        android:imeOptions="actionDone"/>
 
         <Button
             android:id="@+id/start_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/start_button" />
-        </LinearLayout>
+
 </LinearLayout>
