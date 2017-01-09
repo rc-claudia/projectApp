@@ -38,7 +38,7 @@ public class ScoreFragment extends Fragment {
         mUsernameDisplay.setText(mUsername);
 
         mScoreDisplay = (TextView) v.findViewById(R.id.score_text_view);
-        mScoreDisplay.setText(mUserScore);
+        mScoreDisplay.setText(mUserScore + "");
         return v;
     }
 }
