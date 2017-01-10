@@ -11,6 +11,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+import java.util.UUID;
+
 /**
  * Created by Claudia on 03/01/2017.
  */
@@ -21,62 +24,75 @@ public class QuestionFragment extends Fragment{
     private Button mCheatButton;
     private Button mNextButton;
     private Button mFinishButton;
+    private Button mMenuButton;
     private TextView mQuestionTextView;
     private static final String TAG = "QuizActivity";
     private static final String KEY_INDEX = "index";
-    private static final int REQUEST_CODE_CHEAT = 0;
     public int currentGameScore = 0;
     boolean answerIsTrue;
     //private String username;
     protected static final String EXTRA_RECEIVED_USERNAME = "QuizProject.username";
+    private static final String ARG_QUESTION_NUM = "question_num";
+    Question mQuestion;
+    public static final String EXTRA_QUESTION_NUM =
+            "quizProject.question_num";
+    private static final int REQUEST_CODE_MENU = 0;
+    private List<Question> mQuestions;
 
     //DBHandle db = new DBHandle(getActivity());
     User user = new User();
     String username = user.getUserOnScreen();
 
+    public static QuestionFragment newInstance(int qNum) {
+        Bundle args = new Bundle();
+        args.putInt(ARG_QUESTION_NUM, qNum);
+        QuestionFragment fragment = new QuestionFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     private void checkAnswer(boolean userPressedTrue) {
-        boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
+        boolean answerIsTrue = mQuestion.isAnswerTrue();
 
         int messageResId = 0;
 
-        if (mQuestionBank[mCurrentIndex].isHasCheated()) {
+        if (mQuestion.isHasCheated()) {
             messageResId = R.string.judgment_toast;
             Toast.makeText(getActivity(), messageResId, Toast.LENGTH_SHORT)
                     .show();
         }
 
         else {if (userPressedTrue == answerIsTrue) {
-            checkEachAnswer[mCurrentIndex] = true;
+            checkEachAnswer[mQuestionNumber] = true;
         }
         else {
-           checkEachAnswer[mCurrentIndex] = false;
+           checkEachAnswer[mQuestionNumber] = false;
         }}
     }
 
-    private Question[] mQuestionBank = new Question[]{
-            new Question(R.string.question_oceans, true, false),
-            new Question(R.string.question_mideast, false, false),
-            new Question(R.string.question_africa, false, false),
-            new Question(R.string.question_americas, true, false),
-            new Question(R.string.question_asia, true, false),
-    };
+    boolean[] checkEachAnswer = new boolean[5];
 
-    boolean[] checkEachAnswer = new boolean[mQuestionBank.length];
-
-    private int mCurrentIndex = 0;
+    int mQuestionNumber = 0;
     private boolean mIsCheater = false;
+    private boolean mMenuPressed;
 
-    public int getCurrentIndex() {
-        return mCurrentIndex;
-    }
 
     private void updateQuestion() {
-        int question = mQuestionBank[mCurrentIndex].getTextResId();
+        mQuestion = QuestionList.get(getActivity()).getQuestion(mQuestionNumber);
+        int question = mQuestion.getTextResId();
         mQuestionTextView.setText(question);
     }
 
+    private void setQuestionFromMenu(){
+        mQuestionNumber = getActivity().getIntent().getIntExtra(EXTRA_QUESTION_NUM, 4);
+        mQuestion = QuestionList.get(getActivity()).getQuestion(mQuestionNumber);
+        int question = mQuestion.getTextResId();
+        mQuestionTextView.setText(question);
+        mMenuPressed = false;
+    }
+
     private int countScore(){
-        for (int currentIndex = 0; currentIndex < mQuestionBank.length; currentIndex++){
+        for (int currentIndex = 0; currentIndex < 5; currentIndex++){
             if (checkEachAnswer[currentIndex])
                 currentGameScore++;
         }
@@ -92,7 +108,10 @@ public class QuestionFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        QuestionList questionList = QuestionList.get(getActivity());
+        mQuestions = questionList.getQuestions();
     }
+
 
 
     @Override
@@ -101,7 +120,29 @@ public class QuestionFragment extends Fragment{
         View v = inflater.inflate(R.layout.fragment_question, container, false);
         //username = getActivity().getIntent().getStringExtra(EXTRA_RECEIVED_USERNAME);
 
-        mQuestionTextView = (TextView) v.findViewById(R.id.question_text_view);
+        if (mMenuPressed){
+            int messageResId = R.string.judgment_toast;
+            Toast.makeText(getActivity(), messageResId, Toast.LENGTH_SHORT)
+                    .show();
+            setQuestionFromMenu();
+        }
+        else {
+            int messageResId = R.string.correct_toast;
+            Toast.makeText(getActivity(), messageResId, Toast.LENGTH_SHORT)
+                    .show();
+            mQuestionTextView = (TextView) v.findViewById(R.id.question_text_view);
+        }
+
+        mMenuButton = (Button) v.findViewById(R.id.menu_btn);
+
+        mMenuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //menuPressed = true;
+                Intent i = new Intent(getActivity(), QuestionMenuActivity.class);
+                startActivityForResult(i, REQUEST_CODE_MENU);
+            }
+        });
 
         mTrueButton = (Button) v.findViewById(R.id.true_btn);
 
@@ -126,9 +167,9 @@ public class QuestionFragment extends Fragment{
         mCheatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
+                answerIsTrue = mQuestion.isAnswerTrue();
                 mIsCheater = true;
-                mQuestionBank[mCurrentIndex].setHasCheated(mIsCheater);
+                mQuestion.setHasCheated(mIsCheater);
                 Intent i = Cheat_Activity.newIntent(getActivity(), answerIsTrue);
                 startActivity(i);
             }
@@ -139,14 +180,14 @@ public class QuestionFragment extends Fragment{
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
+                mQuestionNumber = (mQuestionNumber + 1) % 5;
                 mIsCheater = false;
                 updateQuestion();
             }
         });
 
         if (savedInstanceState != null) {
-            mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+            mQuestionNumber = savedInstanceState.getInt(KEY_INDEX, 1);
         }
         updateQuestion();
 
@@ -172,11 +213,11 @@ public class QuestionFragment extends Fragment{
                 return;
             }
 
-            if (requestCode == REQUEST_CODE_CHEAT) {
+            if (requestCode == REQUEST_CODE_MENU) {
                 if (data == null) {
                     return;
                 }
-
+                mMenuPressed = QuestionMenuFragment.wasMenuPressed(data);
             }
         }
     }

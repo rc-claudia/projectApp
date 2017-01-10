@@ -8,33 +8,21 @@ import java.util.UUID;
 
     public class Question {
 
-    private UUID mId;
-    private String mTitle;
+    private int mQNumber;
     private int mTextResId;
     private boolean mAnswerTrue;
     private boolean mHasCheated;
 
     public Question() {
-        // Generate unique identifier
-        mId = UUID.randomUUID();
     }
 
-    public UUID getId() {
-        return mId;
-    }
 
-    public String getTitle() {
-        return mTitle;
-    }
 
-    public void setTitle(String title) {
-        mTitle = title;
-    }
-
-    public Question(int textResId, boolean answerTrue, boolean hasCheated) {
+    public Question(int textResId, boolean answerTrue, boolean hasCheated, int number) {
         mTextResId = textResId;
         mAnswerTrue = answerTrue;
         mHasCheated = hasCheated;
+        mQNumber = number;
     }
 
     public boolean isAnswerTrue() {
@@ -58,5 +46,13 @@ import java.util.UUID;
 
     public void setAnswerTrue(boolean answerTrue) {
         mAnswerTrue = answerTrue;
+    }
+
+    public int getQNumber() {
+        return mQNumber;
+    }
+
+    public void setQNumber(int QNumber) {
+        mQNumber = QNumber;
     }
 }

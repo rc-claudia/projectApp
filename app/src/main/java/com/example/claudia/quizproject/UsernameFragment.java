@@ -106,7 +106,7 @@ public class UsernameFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                db.addUser(new User(newUser, email, password));
+               // db.addUser(new User(newUser, email, password));
                 // Start CheatActivity
                 Intent i = new Intent(getActivity(), QuestionActivity.class);
                 startActivity(i);
